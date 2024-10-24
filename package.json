@@ -1,0 +1,24 @@
+{
+  "name": "vue-electron-app",
+  "version": "1.0.0",
+  "description": "Offline Quiz app with Vue in Electron",
+  "main": "main.js",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "start": "electron ."
+  },
+  "author": "Sinox",
+  "license": "ISC",
+  "devDependencies": {
+    "@vue/cli-service": "^5.0.8",
+    "autoprefixer": "^10.4.20",
+    "electron": "^33.0.2",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  },
+  "dependencies": {
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
+  }
+}
