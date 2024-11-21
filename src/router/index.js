@@ -4,7 +4,7 @@ import AdminLogin from '../components/AdminLogin.vue'
 import QuizForm from '../components/QuizForm.vue'
 
 const routes = [
-  { path: '/', },
+  { path: '/', redirect: '/student' },
   { path: '/student', component: StudentView },
   { path: '/quiz', component: QuizForm },
   { path: '/admin-login', component: AdminLogin },

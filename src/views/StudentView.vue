@@ -1,9 +1,9 @@
 <template>
   <div class="min-h-screen flex flex-col justify-center items-center bg-gray-100 bg-image">
     <div class="sm:max-w-md w-full bg-white p-8 shadow-lg rounded-lg">
-      <h2 class="text-center text-2xl font-bold text-gray-900">Ma'lumotlaringizni kiriting</h2>
+      <h2 class="text-center text-2xl font-bold text-gray-900 mb-6">Ma'lumotlaringizni kiriting</h2>
       
-      <form class="mt-8 space-y-6" @submit.prevent="startQuiz">
+      <form class="space-y-6" @submit.prevent="startQuiz">
         <!-- Name Input -->
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">FIO</label>
@@ -34,6 +34,10 @@
               placeholder="Guruh nomini kiriting"
             />
           </div>
+        </div>
+
+        <div class="flex justify-end">
+          <router-link to="/admin-login" class="text-blue-600 underline hover:text-blue-800">Siz adminmi?</router-link>
         </div>
 
         <!-- Submit Button -->
