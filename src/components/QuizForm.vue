@@ -3,76 +3,55 @@
     <div class="max-w-xl w-full mx-auto p-6 bg-white shadow-md rounded-lg">
       <!-- Timer Progress Bar -->
       <div class="w-full h-2 bg-gray-200 rounded-full mb-4 relative">
-        <div
-          class="h-full bg-[#54B4E3] rounded-full transition-all duration-100"
-          :style="{ width: timerProgress + '%' }"
-        ></div>
+        <div class="h-full bg-[#54B4E3] rounded-full transition-all duration-100"
+          :style="{ width: timerProgress + '%' }"></div>
       </div>
 
       <!-- Progress Navigation -->
-      <nav class="flex items-center justify-center mb-6" aria-label="Progress">
+      <nav class="flex items-center justify-center mb-6"
+        aria-label="Progress">
         <p class="text-sm font-medium text-gray-700">
           Bosqich: {{ currentStep + 1 }} / {{ questions.length }}
         </p>
-        <ol role="list" class="ml-8 flex items-center space-x-5">
-          <li
-            v-for="(question, index) in questions"
-            :key="index"
-            v-if="index === currentStep || (index >= currentStep - 2 && index <= currentStep + 2) || index % 10 === 0"
-          >
-            <span
-              class="block h-3 w-3 rounded-full transition-transform duration-300"
-              :class="{
-                'bg-[#54B4E3] scale-125': index === currentStep,
-                'bg-gray-300': index !== currentStep
-              }"
-            >
-              <span class="sr-only">Bosqich {{ index + 1 }}</span>
-            </span>
-          </li>
-        </ol>
       </nav>
 
       <!-- Quiz Questions -->
       <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Savol</h2>
       <div v-if="!finished">
-        <div v-if="questions[currentStep]" class="mb-4">
+        <div v-if="questions[currentStep]"
+          class="mb-4">
           <p class="text-center text-xl font-semibold text-gray-900">
             {{ questions[currentStep].text }}
           </p>
-          <div class="flex justify-center space-x-8 mt-6">
+          <div class="flex justify-center space-x-4 mt-6">
             <button
-              v-if="currentStep !== questions.length"
-              class="w-full btn bg-[#54B4E3] hover:bg-[#52afdd] shadow-md text-white px-6 py-3 rounded transition-all duration-200"
-              @click="nextQuestion"
-            >
+              class="w-full btn bg-green-500 hover:bg-green-600 shadow-md text-white px-6 py-3 rounded transition-all duration-200"
+              @click="selectAnswer('ha')">
               Ha
             </button>
             <button
-              v-if="currentStep !== questions.length"
-              class="w-full btn bg-[#54B4E3] hover:bg-[#52afdd] shadow-md text-white px-6 py-3 rounded transition-all duration-200"
-              @click="nextQuestion"
-            >
+              class="w-full btn bg-red-500 hover:bg-red-600 shadow-md text-white px-6 py-3 rounded transition-all duration-200"
+              @click="selectAnswer('yoq')">
               Yo'q
-            </button>
-            <button
-              v-else
-              class="btn bg-[#54B4E3] hover:bg-[#52afdd] shadow-md text-white px-6 py-3 rounded transition-all duration-200"
-              @click="nextQuestion"
-            >
-              Testni yakunlash
             </button>
           </div>
         </div>
       </div>
 
       <!-- Quiz Finished Message -->
-      <div v-if="finished" class="text-center mt-8">
+      <div v-if="finished"
+        class="text-center mt-8">
         <h3 class="text-lg font-bold text-gray-800">Muvaffaqiyatli yakunladingiz!</h3>
+        <h4 class="text-md mt-4">Natijalar:</h4>
+        <ul class="mt-2">
+          <li v-for="category in results"
+            :key="category.name">
+            <strong>{{ category.name }}:</strong> {{ category.score }} ball ({{ category.level }})
+          </li>
+        </ul>
         <button
           class="btn bg-gray-400 hover:bg-gray-500 shadow-md text-white px-6 py-3 rounded mt-6 transition-all duration-200"
-          @click="resetQuiz"
-        >
+          @click="resetQuiz">
           Asosiy sahifaga qaytish
         </button>
       </div>
@@ -156,48 +135,156 @@ export default {
         { text: 'Men yolg‘iz qolganimda o‘zimni nihoyatda baxtiyor xis qilaman.', answer: null },
         { text: 'Uyquga yotsam odatda bir necha daqiqadan so‘ng uxlab qolaman.', answer: null },
       ],
+      categories: [
+        {
+          name: "Ishonchlilik",
+          ha: [],
+          yoq: [1, 5, 11, 18, 24, 31, 35, 38, 42, 45, 52, 60, 68],
+          levels: [
+            { range: [10, Infinity], label: "Past" },
+            { range: [8, 9], label: "Qon.li" },
+            { range: [0, 7], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Axloqiy normativlik (AN)",
+          ha: [4, 14, 17, 20, 30, 34, 41, 44, 48, 51, 55, 59, 62],
+          yoq: [2, 9, 23, 39, 46, 67],
+          levels: [
+            { range: [15, Infinity], label: "Past" },
+            { range: [12, 14], label: "Qon.li" },
+            { range: [0, 11], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Nevrotizm",
+          ha: [3, 8, 16, 21, 28, 53, 58],
+          yoq: [70],
+          levels: [
+            { range: [0, 0], label: "Past" },
+            { range: [1, 1], label: "Qon.li" },
+            { range: [2, Infinity], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Tajovuzkor agressivlik",
+          ha: [7, 6, 10, 33, 40, 43, 54],
+          yoq: [63],
+          levels: [
+            { range: [0, 0], label: "Past" },
+            { range: [1, 1], label: "Qon.li" },
+            { range: [2, Infinity], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Depressivlik",
+          ha: [12, 15, 25, 26, 29, 36, 37, 47, 50, 61, 66],
+          yoq: [],
+          levels: [
+            { range: [0, 3], label: "Past" },
+            { range: [4, 5], label: "Qon.li" },
+            { range: [6, Infinity], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Reaktiv agressivlik",
+          ha: [7, 13, 19, 22, 27, 32, 57, 64],
+          yoq: [],
+          levels: [
+            { range: [0, 3], label: "Past" },
+            { range: [4, 5], label: "Qon.li" },
+            { range: [6, Infinity], label: "Yuqori" },
+          ],
+        },
+        {
+          name: "Emotsional labilnost",
+          ha: [8, 26, 29, 49, 50, 56, 61, 69],
+          yoq: [65],
+          levels: [
+            { range: [0, 3], label: "Past" },
+            { range: [4, 5], label: "Qon.li" },
+            { range: [6, Infinity], label: "Yuqori" },
+          ],
+        },
+      ],
       currentStep: 0,
-      selectedAnswer: '',
       finished: false,
-      timerProgress: 100, // Represents the progress percentage (100% initially)
-      timer: null, // Holds the interval for the timer
+      timerProgress: 100,
+      timer: null,
+      results: [],
     };
   },
   methods: {
-    nextQuestion() {
-      // Save the selected answer to the current question
-      this.questions[this.currentStep].answer = this.selectedAnswer;
+    selectAnswer(answer) {
+      this.questions[this.currentStep].answer = answer;
 
-      // Move to the next question if not the last one
+      this.nextQuestion();
+    },
+    nextQuestion() {
       if (this.currentStep < this.questions.length - 1) {
         this.currentStep++;
         this.resetTimer();
       } else {
-        this.finished = true; // Mark quiz as finished
+        this.finished = true;
+        this.calculateResults();
         this.clearTimer();
+        this.saveResultsToLocalStorage();
       }
     },
+    calculateResults() {
+      this.results = this.categories.map((category) => {
+        let score = 0;
+
+        category.ha.forEach((questionIndex) => {
+          if (this.questions[questionIndex - 1]?.answer === "ha") {
+            score++;
+          }
+        });
+
+        category.yoq.forEach((questionIndex) => {
+          if (this.questions[questionIndex - 1]?.answer === "yoq") {
+            score++;
+          }
+        });
+
+        const level = category.levels.find(
+          (l) => score >= l.range[0] && score <= l.range[1]
+        )?.label;
+
+        return {
+          name: category.name,
+          score,
+          level: level || "No level",
+        };
+      });
+    },
+    saveResultsToLocalStorage() {
+      const savedResults = JSON.parse(localStorage.getItem("results")) || [];
+      const currentResult = {
+        studentName: JSON.parse(localStorage.getItem("student")).name || "No Name",
+        studentGroup: JSON.parse(localStorage.getItem("student")).group || "-",
+        date: new Date().toLocaleString(),
+        categories: this.results,
+      };
+      savedResults.push(currentResult);
+      localStorage.setItem("results", JSON.stringify(savedResults));
+    },
     resetQuiz() {
-      // Reset the quiz state
       this.currentStep = 0;
-      this.selectedAnswer = '';
       this.finished = false;
+      this.questions.forEach((q) => (q.answer = null));
+      this.timerProgress = 100;
+      this.results = [];
       this.resetTimer();
     },
     resetTimer() {
-      // Clear any existing timer
       this.clearTimer();
-
-      // Reset timer progress to 100%
       this.timerProgress = 100;
-
-      // Start a new timer
       this.timer = setInterval(() => {
-        // Decrease progress each second
         if (this.timerProgress > 0) {
-          this.timerProgress -= 3.33; // Decreases by ~3.33% each second
+          this.timerProgress -= 100 / 30; // 30 seconds
         } else {
-          this.nextQuestion(); // Auto-skip to the next question
+          this.selectAnswer(null); // Auto-move if time runs out
         }
       }, 1000);
     },
@@ -209,14 +296,15 @@ export default {
     },
   },
   mounted() {
-    this.resetTimer(); // Start timer on component mount
+    this.resetTimer(); // Start the timer on mount
   },
   beforeDestroy() {
-    this.clearTimer(); // Clear timer when component is destroyed
+    this.clearTimer(); // Clear timer on component destroy
+    localStorage.removeItem("student")
   },
 };
 </script>
 
 <style>
-/* Add any additional styles if needed */
+/* Optional styles */
 </style>
