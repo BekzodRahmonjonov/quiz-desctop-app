@@ -276,6 +276,8 @@ export default {
       this.timerProgress = 100;
       this.results = [];
       this.resetTimer();
+      localStorage.removeItem('student')
+      this.$router.push('/student');
     },
     resetTimer() {
       this.clearTimer();

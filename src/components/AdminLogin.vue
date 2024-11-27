@@ -69,12 +69,21 @@ export default {
     };
   },
   methods: {
+    generateToken() {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let token = '';
+      for (let i = 0; i < 10; i++) {
+        token += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      return token;
+    },
     login() {
-      // Example login check: Adjust as per your authentication logic
       if (this.username === 'admin' && this.password === 'password') {
-        this.$router.push('/admin'); // Navigate to admin dashboard
+        const token = this.generateToken();
+        localStorage.setItem('authToken', token);
+        this.$router.push('/admin');
       } else {
-        this.errorMessage = 'Invalid username or password.'; // Display error
+        this.errorMessage = 'Invalid username or password.';
       }
     }
   }

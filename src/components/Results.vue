@@ -71,14 +71,24 @@
       </div>
     </div>
 
-    <div class="mt-8 flex justify-center">
-      <button :disabled="!filteredResults.length"
-        @click="clearAllResults"
+    <div class="mt-8 flex justify-center gap-3">
+      <button v-if="selectedTab == 'Barcha'"
+        :disabled="!students.length"
+        @click="confirmAndClearResults"
         :class="{
-            '!bg-[gray]': !filteredResults.length
+            '!bg-[gray]': !students.length
           }"
         class="bg-red-500 hover:bg-red-600 text-white px-12 py-2 rounded shadow font-semibold">
         Tozalash
+      </button>
+      <button v-if="selectedTab == 'Barcha'"
+        :disabled="!students.length"
+        @click="exportToExcel"
+        :class="{
+            '!bg-[gray]': !students.length
+          }"
+        class="bg-green-500 hover:bg-green-600 text-white px-12 py-2 rounded shadow font-semibold">
+        Import
       </button>
     </div>
   </div>
@@ -92,6 +102,7 @@ const categoryDefinitions = {
   Past: ["Past", "Past", "Yuqori", "Yuqori", "Yuqori", "Past", "Yuqori"],
 };
 
+import * as XLSX from "xlsx";
 
 export default {
   data() {
@@ -121,16 +132,40 @@ export default {
     loadStudents() {
       const savedResults = JSON.parse(localStorage.getItem("results")) || [];
       this.students = savedResults.map((result) => {
-        const studentResults = result.categories.map((category) => category.level); // Получаем уровни шкал
+        const studentResults = result.categories.map((category) => category.level);
         const predominantCategory = this.determineStudentCategory(studentResults);
         return {
           studentName: result.studentName,
           studentGroup: result.studentGroup,
           date: result.date,
+          categories: result.categories,
           category: predominantCategory,
         };
       });
       this.updateTabCounts();
+    },
+    exportToExcel() {
+      const excelData = this.students.map((student) => {
+        const categories = student.categories.reduce((acc, category, index) => {
+          acc[category.name] = category.level + ' - ' + category.score;
+          return acc;
+        }, {});
+
+        return {
+          "Student Ismi": student.studentName,
+          "Student Guruhi": student.studentGroup,
+          "Sana": student.date,
+          "Asosiy Kategoriya": student.category,
+          ...categories,
+        };
+      });
+
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+
+      XLSX.writeFile(workbook, "students_with_categories.xlsx");
     },
     // determineStudentCategory(categories) {
     //   const categoryCount = {
@@ -195,10 +230,17 @@ export default {
         tab.current = tab.name === tabName;
       });
     },
+    confirmAndClearResults() {
+      const isConfirmed = window.confirm(
+        "Barcha natijalarni o'chirishga ishonchingiz komilmi?"
+      );
+      if (isConfirmed) {
+        this.clearAllResults();
+      }
+    },
     clearAllResults() {
       localStorage.removeItem("results");
       this.students = [];
-      this.updateTabCounts();
     },
   },
   mounted() {

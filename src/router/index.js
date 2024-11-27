@@ -8,12 +8,16 @@ const routes = [
   { path: '/student', component: StudentView },
   { path: '/quiz', component: QuizForm },
   { path: '/admin-login', component: AdminLogin },
-  { path: '/admin', component: () => import('../views/AdminView.vue') }
+  {
+    path: '/admin',
+    component: () => import('../views/AdminView.vue'),
+    meta: { requiresAuth: true }, 
+  },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // Use hash mode
-  routes
+  history: createWebHashHistory(), 
+  routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -24,7 +28,15 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/quiz') {
     const student = JSON.parse(localStorage.getItem('student'));
     if (!student || !student.name || !student.group) {
-      next('/student'); 
+      next('/student');
+      return;
+    }
+  }
+
+  if (to.meta.requiresAuth) {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      next('/admin-login'); 
       return;
     }
   }
