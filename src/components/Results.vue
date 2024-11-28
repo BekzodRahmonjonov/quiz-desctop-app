@@ -48,16 +48,22 @@
               <tr>
                 <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Ism</th>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Guruh</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Yoshi</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Jinsi</th>
+                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Unvoni</th>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Sana</th>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Kategoriya</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
               <tr v-for="student in filteredResults"
-                :key="student.studentName">
-                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ student.studentName }}
+                :key="student.name">
+                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ student.name }}
                 </td>
-                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.studentGroup }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.className }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.age }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.gender }}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.title }}</td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.date }}</td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.category }}</td>
               </tr>
@@ -135,8 +141,11 @@ export default {
         const studentResults = result.categories.map((category) => category.level);
         const predominantCategory = this.determineStudentCategory(studentResults);
         return {
-          studentName: result.studentName,
-          studentGroup: result.studentGroup,
+          name: result.name,
+          className: result.className,
+          gender: result.gender,
+          age: result.age,
+          title: result.title,
           date: result.date,
           categories: result.categories,
           category: predominantCategory,
@@ -152,8 +161,11 @@ export default {
         }, {});
 
         return {
-          "Student Ismi": student.studentName,
-          "Student Guruhi": student.studentGroup,
+          "Student Ismi": student.name,
+          "Student Guruhi": student.className,
+          "Student Yoshi": student.age,
+          "Student Unvoni": student.title,
+          "Student Jinsi": student.gender,
           "Sana": student.date,
           "Asosiy Kategoriya": student.category,
           ...categories,

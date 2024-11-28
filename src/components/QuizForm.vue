@@ -261,8 +261,11 @@ export default {
     saveResultsToLocalStorage() {
       const savedResults = JSON.parse(localStorage.getItem("results")) || [];
       const currentResult = {
-        studentName: JSON.parse(localStorage.getItem("student")).name || "No Name",
-        studentGroup: JSON.parse(localStorage.getItem("student")).group || "-",
+        name: JSON.parse(localStorage.getItem("student")).name || "No Name",
+        className: JSON.parse(localStorage.getItem("student")).group || "-",
+        title: JSON.parse(localStorage.getItem("student")).title || "-",
+        gender: JSON.parse(localStorage.getItem("student")).gender || "-",
+        age: JSON.parse(localStorage.getItem("student")).age || "-",
         date: new Date().toLocaleString(),
         categories: this.results,
       };
