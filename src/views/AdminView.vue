@@ -10,12 +10,12 @@
 
       <nav class="mt-6 px-4 flex-1">
         <ul class="space-y-1">
-          <li>
+          <!-- <li>
             <a @click="currentView = 'questions'"
               class="cursor-pointer block rounded-md py-2 pl-8 pr-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
               Savollar
             </a>
-          </li>
+          </li> -->
           <li>
             <a @click="currentView = 'results'"
               class="cursor-pointer block rounded-md py-2 pl-8 pr-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
@@ -47,21 +47,21 @@
 </template>
 
 <script>
-import Questions from '../components/Questions.vue'
+// import Questions from '../components/Questions.vue'
 import Results from '../components/Results.vue'
 import UpdatePassword from '../components/UpdatePassword.vue'
 
 export default {
   data() {
     return {
-      currentView: 'questions', // Default view
+      currentView: 'results', // Default view
     };
   },
   computed: {
     currentViewComponent() {
       switch (this.currentView) {
-        case 'questions':
-          return Questions;
+        // case 'questions':
+        //   return Questions;
         case 'results':
           return Results;
         case 'password':
