@@ -40,7 +40,7 @@
 
     <!-- Таблица с результатами -->
     <div class="mt-8 flow-root">
-      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="-mx-4 -my-2 scrollbar overflow-x-auto min-h-[700px] w-full max-w-[1300px] sm:-mx-6 lg:-mx-8">
         <div v-if="filteredResults.length > 0"
           class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
           <table class="min-w-full divide-y divide-gray-300">
@@ -53,6 +53,10 @@
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Unvoni</th>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Sana</th>
                 <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Kategoriya</th>
+                <th class="px-3 text-nowrap py-3.5 text-left text-sm font-semibold text-gray-900"
+                  v-for="student in filteredResults[0].categories"
+                  :key="student.name">{{ student.name }}
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -66,6 +70,9 @@
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.title }}</td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.date }}</td>
                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ student.category }}</td>
+                <td v-for="(el, index) in student.categories"
+                  :key="index"
+                  class="whitespace-nowrap px-3 py-4 text-sm text-center text-gray-500">{{ el.score }}</td>
               </tr>
             </tbody>
           </table>
